@@ -65,7 +65,7 @@ class ConversationRepository
      * @param string $content
      * @param int $from
      * @param int $to
-     * @return Model
+     * @return mixed
      */
     public function createMessage(string $content, int $from, int $to)
     {

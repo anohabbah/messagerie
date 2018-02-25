@@ -17,7 +17,7 @@
                             </div>
                         @endif
 
-                        @foreach(array_reverse($messages->items) as $message)
+                        @foreach(array_reverse($messages->items()) as $message)
                             <div class="row">
                                 <div class="col-md-10{{ $message->from->id !== $user->id ? ' col-md-offset-2 text-right' : '' }}">
                                     <p>
