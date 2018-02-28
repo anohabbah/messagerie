@@ -40,9 +40,7 @@ class ConversationsController extends Controller
      */
     public function index()
     {
-        return view('conversations.index')
-            ->withUnread($this->r->unreadCount($this->auth->user()->id))
-            ->withUsers($this->r->getConversations($this->auth->user()->id));
+        return view('conversations.index');
     }
 
     /**

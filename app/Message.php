@@ -19,6 +19,7 @@
 namespace App;
 
 
+use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 
 class Message extends Model
@@ -35,5 +36,10 @@ class Message extends Model
     public function from()
     {
         return $this->belongsTo(User::class, 'from_id');
+    }
+
+    protected function serializeDate(DateTimeInterface $date)
+    {
+        return $date->format('c');
     }
 }
