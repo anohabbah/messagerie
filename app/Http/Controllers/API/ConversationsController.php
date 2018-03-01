@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Events\NewMessage;
 use App\Http\Requests\StoreMessageRequest;
 use App\Repositories\ConversationRepository;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -63,10 +65,16 @@ class ConversationsController extends Controller
         }
 
         $messages = $messagesQuery->limit(10)->get();
+        $update = false;
         foreach ($messages as $message) {
             if ($message->read_at === null && $message->to_id === $request->user()->id) {
-                $this->r->markAsReadAll($message->from_id, $message->to_id);
-                break;
+                $message->read_at = Carbon::now();
+
+                if (!$update) {
+                    $this->r->markAsReadAll($message->from_id, $message->to_id);
+                }
+
+                $update = true;
             }
         }
         return new JsonResponse([
@@ -78,6 +86,8 @@ class ConversationsController extends Controller
     public function store(StoreMessageRequest $request, User $user)
     {
         $message = $this->r->createMessage($request->get('content'), $request->user()->id, $user->id);
+
+        broadcast(new NewMessage($message));
 
         return new JsonResponse(['message' => $message]);
     }

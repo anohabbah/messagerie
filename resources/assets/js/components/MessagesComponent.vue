@@ -38,6 +38,9 @@
             messages: function () {
                 return this.$store.getters.messages(this.$route.params.id)
             },
+            lastMessage: function () {
+                return this.messages[this.messages.length - 1];
+            },
             name: function () {
                 return this.$store.getters.conversation(this.$route.params.id).name
             },
@@ -48,14 +51,26 @@
         mounted() {
             this.loadMessages();
             this.$message = this.$el.querySelector('.messagerie__body');
+            document.addEventListener('visibilitychange', this.onVisible)
+        },
+        destroyed() {
+            document.removeEventListener('visibilitychange', this.onVisible)
         },
         watch: {
             '$route.params.id': function () {
                 this.loadMessages();
+            },
+            lastMessage: function () {
+                this.scrollBot();
             }
         },
         components: {message},
         methods: {
+            onVisible: function () {
+                if (!document.hidden) {
+                    this.$store.dispatch('loadMessages', this.$route.params.id);
+                }
+            },
             async onScroll() {
                 if (this.$message.scrollTop === 0) {
                     this.loading = true;
@@ -76,7 +91,6 @@
             },
             loadMessages: async function () {
                 await this.$store.dispatch('loadMessages', this.$route.params.id);
-                this.scrollBot();
                 if (this.messages < this.count) {
                     this.$message.addEventListener('scroll', this.onScroll());
                 }
@@ -93,7 +107,6 @@
                             userId: this.$route.params.id
                         });
                         this.content = '';
-                        this.scrollBot();
                     } catch (e) {
                         if (e.errors)
                             this.errors = e.errors;

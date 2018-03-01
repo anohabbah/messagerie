@@ -4,7 +4,7 @@
             <div class="list-group">
                 <template v-for="conversation in conversations">
                     <router-link :to="{ name: 'conversation', params: {id: conversation.id}}"
-                       class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                 class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                         {{ conversation.name }}
                         <span class="badge badge-pill badge-primary"
                               v-if="conversation.unread">{{ conversation.unread }}</span>
@@ -31,7 +31,7 @@
         },
         mounted() {
             this.$store.dispatch('loadConversations');
-            this.$store.commit('setUser', this.user);
+            this.$store.dispatch('setUser', this.user);
         }
     }
 </script>

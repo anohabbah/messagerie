@@ -1,11 +1,15 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import store from './store/store';
+import messages from './components/MessagesComponent';
+
+// window.io = require('socket.io-client');
+window.Pusher = require('pusher-js');
+
 
 Vue.use(VueRouter);
 
 Vue.component('messagerie', require('./components/MessagerieComponent'));
-import messages from './components/MessagesComponent';
 
 let $conversations = document.querySelector('#messagerie');
 
